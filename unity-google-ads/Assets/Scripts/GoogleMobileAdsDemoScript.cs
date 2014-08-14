@@ -70,7 +70,7 @@ public class GoogleMobileAdsDemoScript : MonoBehaviour
         #if UNITY_EDITOR
             string adUnitId = "unused";
         #elif UNITY_ANDROID
-            string adUnitId = "INSERT_ANDROID_BANNER_AD_UNIT_ID_HERE";
+			string adUnitId = "ca-app-pub-5820142959014278/2921052144";
         #elif UNITY_IPHONE
             string adUnitId = "INSERT_IOS_BANNER_AD_UNIT_ID_HERE";
         #else
@@ -95,7 +95,7 @@ public class GoogleMobileAdsDemoScript : MonoBehaviour
         #if UNITY_EDITOR
             string adUnitId = "unused";
         #elif UNITY_ANDROID
-            string adUnitId = "INSERT_ANDROID_INTERSTITIAL_AD_UNIT_ID_HERE";
+			string adUnitId = "ca-app-pub-5820142959014278/8261078545";
         #elif UNITY_IPHONE
             string adUnitId = "INSERT_IOS_INTERSTITIAL_AD_UNIT_ID_HERE";
         #else
