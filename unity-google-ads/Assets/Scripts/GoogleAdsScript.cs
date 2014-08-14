@@ -1,78 +1,97 @@
-using System;
+﻿using System;
 using UnityEngine;
 using GoogleMobileAds;
 using GoogleMobileAds.Api;
+using System.Security.Cryptography.X509Certificates;
 
-// Example script showing how to invoke the Google Mobile Ads Unity plugin.
-public class GoogleMobileAdsDemoScript : MonoBehaviour
+public class GoogleAdsScript : MonoBehaviour
 {
 
 		private BannerView bannerView;
 		private InterstitialAd interstitial;
 
-		void OnGUI ()
-		{
-				// Puts some basic buttons onto the screen.
-				GUI.skin.button.fontSize = (int)(0.05f * Screen.height);
+		public string androidAddID;
+		public string iphoneAddID;
 
-				Rect requestBannerRect = new Rect (0.1f * Screen.width, 0.05f * Screen.height,
-						                             0.8f * Screen.width, 0.1f * Screen.height);
-				if (GUI.Button (requestBannerRect, "Request Banner")) {
-						RequestBanner ();
-				}
+		public bool Banner;
+		public bool IABBanner;
+		public bool Leaderboard;
+		public bool MediumRectangle;
+		public bool SmartBanner;
 
-				Rect showBannerRect = new Rect (0.1f * Screen.width, 0.175f * Screen.height,
-						                          0.8f * Screen.width, 0.1f * Screen.height);
-				if (GUI.Button (showBannerRect, "Show Banner")) {
-						bannerView.Show ();
-				}
-
-				Rect hideBannerRect = new Rect (0.1f * Screen.width, 0.3f * Screen.height,
-						                          0.8f * Screen.width, 0.1f * Screen.height);
-				if (GUI.Button (hideBannerRect, "Hide Banner")) {
-						bannerView.Hide ();
-				}
-
-				Rect destroyBannerRect = new Rect (0.1f * Screen.width, 0.425f * Screen.height,
-						                             0.8f * Screen.width, 0.1f * Screen.height);
-				if (GUI.Button (destroyBannerRect, "Destroy Banner")) {
-						bannerView.Destroy ();
-				}
-
-				Rect requestInterstitialRect = new Rect (0.1f * Screen.width, 0.55f * Screen.height,
-						                                   0.8f * Screen.width, 0.1f * Screen.height);
-				if (GUI.Button (requestInterstitialRect, "Request Interstitial")) {
-						RequestInterstitial ();
-				}
-
-				Rect showInterstitialRect = new Rect (0.1f * Screen.width, 0.675f * Screen.height,
-						                                0.8f * Screen.width, 0.1f * Screen.height);
-				if (GUI.Button (showInterstitialRect, "Show Interstitial")) {
-						ShowInterstitial ();
-				}
-
-				Rect destroyInterstitialRect = new Rect (0.1f * Screen.width, 0.8f * Screen.height,
-						                                   0.8f * Screen.width, 0.1f * Screen.height);
-				if (GUI.Button (destroyInterstitialRect, "Destroy Interstitial")) {
-						interstitial.Destroy ();
-				}
-		}
+		public bool TopPosition;
+		public bool BottomPosition;
 
 		private void RequestBanner ()
 		{
+
 				#if UNITY_EDITOR
 				string adUnitId = "unused";
 				#elif UNITY_ANDROID
-			string adUnitId = "ca-app-pub-5820142959014278/2921052144";
+				string adUnitId = androidAddID;
 				#elif UNITY_IPHONE
-            string adUnitId = "INSERT_IOS_BANNER_AD_UNIT_ID_HERE";
+				string adUnitId = iphoneAddID;
 				#else
-            string adUnitId = "unexpected_platform";
+				string adUnitId = "unexpected_platform";
 				#endif
 
-				AdSize adSize123 = AdSize.Banner;
-				// Create a 320x50 banner at the top of the screen.
-				bannerView = new BannerView (adUnitId, adSize123, AdPosition.Top);
+				#region Banner Size
+				AdSize adsize = AdSize.SmartBanner;
+
+				if (Banner == true) {
+						adsize = AdSize.Banner;
+				}
+				if (IABBanner == true) {
+						adsize = AdSize.IABBanner;
+				}
+				if (Leaderboard == true) {
+						adsize = AdSize.Leaderboard;
+				}
+				if (MediumRectangle == true) {
+						adsize = AdSize.MediumRectangle;
+				}
+				if (SmartBanner == true) {
+						adsize = AdSize.SmartBanner;
+				}
+				if ((Banner == true) && (IABBanner == true) &&
+				    (MediumRectangle == true) && (Leaderboard == true) &&
+				    (SmartBanner == true)) {
+						Debug.LogError ("You check every BannerSize flags");
+				}
+
+				if ((!Banner == true) && (!IABBanner == true) &&
+						(!MediumRectangle == true) && (!Leaderboard == true) &&
+						(!SmartBanner == true)) {
+						Debug.LogError ("You need to check any BannerSize flag");
+				}
+				#endregion
+
+				#region Banner Position
+
+				AdPosition adposition = AdPosition.Top;
+
+				if (TopPosition == true) {
+
+						adposition = AdPosition.Top;
+				}
+
+				if (BottomPosition == true) {
+
+						adposition = AdPosition.Bottom;
+				}
+
+				if ((TopPosition == true) && (BottomPosition == true)) {
+						Debug.LogError ("You check every position flags");
+				}
+
+				if ((!TopPosition == true) && (!BottomPosition == true)) {
+						Debug.LogError ("You need to check any position flag");
+				}
+
+				#endregion
+
+				// Create a banner.
+				bannerView = new BannerView (adUnitId, adsize, adposition);
 				// Register for ad events.
 				bannerView.AdLoaded += HandleAdLoaded;
 				bannerView.AdFailedToLoad += HandleAdFailedToLoad;
@@ -89,11 +108,11 @@ public class GoogleMobileAdsDemoScript : MonoBehaviour
 				#if UNITY_EDITOR
 				string adUnitId = "unused";
 				#elif UNITY_ANDROID
-			string adUnitId = "ca-app-pub-5820142959014278/8261078545";
+        string adUnitId = "ca-app-pub-5820142959014278/8261078545";
 				#elif UNITY_IPHONE
-            string adUnitId = "INSERT_IOS_INTERSTITIAL_AD_UNIT_ID_HERE";
+        string adUnitId = "INSERT_IOS_INTERSTITIAL_AD_UNIT_ID_HERE";
 				#else
-            string adUnitId = "unexpected_platform";
+        string adUnitId = "unexpected_platform";
 				#endif
 
 				// Create an interstitial.
@@ -113,14 +132,14 @@ public class GoogleMobileAdsDemoScript : MonoBehaviour
 		private AdRequest createAdRequest ()
 		{
 				return new AdRequest.Builder ()
-                .AddTestDevice (AdRequest.TestDeviceSimulator)
-                .AddTestDevice ("0123456789ABCDEF0123456789ABCDEF")
-                .AddKeyword ("game")
-                .SetGender (Gender.Male)
-                .SetBirthday (new DateTime (1985, 1, 1))
-                .TagForChildDirectedTreatment (false)
-                .AddExtra ("color_bg", "9B30FF")
-                .Build ();
+            .AddTestDevice (AdRequest.TestDeviceSimulator)
+            .AddTestDevice ("0123456789ABCDEF0123456789ABCDEF")
+            .AddKeyword ("game")
+            .SetGender (Gender.Male)
+            .SetBirthday (new DateTime (1985, 1, 1))
+            .TagForChildDirectedTreatment (false)
+            .AddExtra ("color_bg", "9B30FF")
+            .Build ();
 
 		}
 
@@ -200,4 +219,5 @@ public class GoogleMobileAdsDemoScript : MonoBehaviour
 		}
 
 		#endregion
+
 }
