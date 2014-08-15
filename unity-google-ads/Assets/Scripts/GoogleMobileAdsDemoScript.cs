@@ -7,197 +7,276 @@ using GoogleMobileAds.Api;
 public class GoogleMobileAdsDemoScript : MonoBehaviour
 {
 
-		private BannerView bannerView;
-		private InterstitialAd interstitial;
+    private BannerView bannerView;
+    private InterstitialAd interstitial;
 
-		void OnGUI ()
-		{
-				// Puts some basic buttons onto the screen.
-				GUI.skin.button.fontSize = (int)(0.05f * Screen.height);
+    public string bannerAdID;
+    public string interstitialAdID;
 
-				Rect requestBannerRect = new Rect (0.1f * Screen.width, 0.05f * Screen.height,
-						                             0.8f * Screen.width, 0.1f * Screen.height);
-				if (GUI.Button (requestBannerRect, "Request Banner")) {
-						RequestBanner ();
-				}
+    public bool Banner;
+    public bool IABBanner;
+    public bool Leaderboard;
+    public bool MediumRectangle;
+    public bool SmartBanner;
 
-				Rect showBannerRect = new Rect (0.1f * Screen.width, 0.175f * Screen.height,
-						                          0.8f * Screen.width, 0.1f * Screen.height);
-				if (GUI.Button (showBannerRect, "Show Banner")) {
-						bannerView.Show ();
-				}
+    public bool TopPosition;
+    public bool BottomPosition;
 
-				Rect hideBannerRect = new Rect (0.1f * Screen.width, 0.3f * Screen.height,
-						                          0.8f * Screen.width, 0.1f * Screen.height);
-				if (GUI.Button (hideBannerRect, "Hide Banner")) {
-						bannerView.Hide ();
-				}
+    public string keywords;
+    public bool TagForChildDirectedTreatmentAD = false;
+    public int BirthdayYear;
+    public int BirthdayMonth;
+    public int BirthdayDay;
 
-				Rect destroyBannerRect = new Rect (0.1f * Screen.width, 0.425f * Screen.height,
-						                             0.8f * Screen.width, 0.1f * Screen.height);
-				if (GUI.Button (destroyBannerRect, "Destroy Banner")) {
-						bannerView.Destroy ();
-				}
+    void OnGUI()
+    {
+        // Puts some basic buttons onto the screen.
+        GUI.skin.button.fontSize = (int)(0.05f * Screen.height);
 
-				Rect requestInterstitialRect = new Rect (0.1f * Screen.width, 0.55f * Screen.height,
-						                                   0.8f * Screen.width, 0.1f * Screen.height);
-				if (GUI.Button (requestInterstitialRect, "Request Interstitial")) {
-						RequestInterstitial ();
-				}
+        Rect requestBannerRect = new Rect(0.1f * Screen.width, 0.05f * Screen.height,
+                                 0.8f * Screen.width, 0.1f * Screen.height);
+        if (GUI.Button(requestBannerRect, "Request Banner"))
+        {
+            RequestBanner();
+        }
 
-				Rect showInterstitialRect = new Rect (0.1f * Screen.width, 0.675f * Screen.height,
-						                                0.8f * Screen.width, 0.1f * Screen.height);
-				if (GUI.Button (showInterstitialRect, "Show Interstitial")) {
-						ShowInterstitial ();
-				}
+        Rect showBannerRect = new Rect(0.1f * Screen.width, 0.175f * Screen.height,
+                              0.8f * Screen.width, 0.1f * Screen.height);
+        if (GUI.Button(showBannerRect, "Show Banner"))
+        {
+            bannerView.Show();
+        }
 
-				Rect destroyInterstitialRect = new Rect (0.1f * Screen.width, 0.8f * Screen.height,
-						                                   0.8f * Screen.width, 0.1f * Screen.height);
-				if (GUI.Button (destroyInterstitialRect, "Destroy Interstitial")) {
-						interstitial.Destroy ();
-				}
-		}
+        Rect hideBannerRect = new Rect(0.1f * Screen.width, 0.3f * Screen.height,
+                              0.8f * Screen.width, 0.1f * Screen.height);
+        if (GUI.Button(hideBannerRect, "Hide Banner"))
+        {
+            bannerView.Hide();
+        }
 
-		private void RequestBanner ()
-		{
-				#if UNITY_EDITOR
-				string adUnitId = "unused";
-				#elif UNITY_ANDROID
-			string adUnitId = "ca-app-pub-5820142959014278/2921052144";
-				#elif UNITY_IPHONE
-            string adUnitId = "INSERT_IOS_BANNER_AD_UNIT_ID_HERE";
-				#else
-            string adUnitId = "unexpected_platform";
-				#endif
+        Rect destroyBannerRect = new Rect(0.1f * Screen.width, 0.425f * Screen.height,
+                                 0.8f * Screen.width, 0.1f * Screen.height);
+        if (GUI.Button(destroyBannerRect, "Destroy Banner"))
+        {
+            bannerView.Destroy();
+        }
 
-				AdSize adSize123 = AdSize.Banner;
-				// Create a 320x50 banner at the top of the screen.
-				bannerView = new BannerView (adUnitId, adSize123, AdPosition.Top);
-				// Register for ad events.
-				bannerView.AdLoaded += HandleAdLoaded;
-				bannerView.AdFailedToLoad += HandleAdFailedToLoad;
-				bannerView.AdOpened += HandleAdOpened;
-				bannerView.AdClosing += HandleAdClosing;
-				bannerView.AdClosed += HandleAdClosed;
-				bannerView.AdLeftApplication += HandleAdLeftApplication;
-				// Load a banner ad.
-				bannerView.LoadAd (createAdRequest ());
-		}
+        Rect requestInterstitialRect = new Rect(0.1f * Screen.width, 0.55f * Screen.height,
+                                       0.8f * Screen.width, 0.1f * Screen.height);
+        if (GUI.Button(requestInterstitialRect, "Request Interstitial"))
+        {
+            RequestInterstitial();
+        }
 
-		private void RequestInterstitial ()
-		{
-				#if UNITY_EDITOR
-				string adUnitId = "unused";
-				#elif UNITY_ANDROID
-			string adUnitId = "ca-app-pub-5820142959014278/8261078545";
-				#elif UNITY_IPHONE
-            string adUnitId = "INSERT_IOS_INTERSTITIAL_AD_UNIT_ID_HERE";
-				#else
-            string adUnitId = "unexpected_platform";
-				#endif
+        Rect showInterstitialRect = new Rect(0.1f * Screen.width, 0.675f * Screen.height,
+                                    0.8f * Screen.width, 0.1f * Screen.height);
+        if (GUI.Button(showInterstitialRect, "Show Interstitial"))
+        {
+            ShowInterstitial();
+        }
 
-				// Create an interstitial.
-				interstitial = new InterstitialAd (adUnitId);
-				// Register for ad events.
-				interstitial.AdLoaded += HandleInterstitialLoaded;
-				interstitial.AdFailedToLoad += HandleInterstitialFailedToLoad;
-				interstitial.AdOpened += HandleInterstitialOpened;
-				interstitial.AdClosing += HandleInterstitialClosing;
-				interstitial.AdClosed += HandleInterstitialClosed;
-				interstitial.AdLeftApplication += HandleInterstitialLeftApplication;
-				// Load an interstitial ad.
-				interstitial.LoadAd (createAdRequest ());
-		}
+        Rect destroyInterstitialRect = new Rect(0.1f * Screen.width, 0.8f * Screen.height,
+                                       0.8f * Screen.width, 0.1f * Screen.height);
+        if (GUI.Button(destroyInterstitialRect, "Destroy Interstitial"))
+        {
+            interstitial.Destroy();
+        }
+    }
+        
 
-		// Returns an ad request with custom ad targeting.
-		private AdRequest createAdRequest ()
-		{
-				return new AdRequest.Builder ()
-                .AddTestDevice (AdRequest.TestDeviceSimulator)
-                .AddTestDevice ("0123456789ABCDEF0123456789ABCDEF")
-                .AddKeyword ("game")
-                .SetGender (Gender.Male)
-                .SetBirthday (new DateTime (1985, 1, 1))
-                .TagForChildDirectedTreatment (false)
-                .AddExtra ("color_bg", "9B30FF")
-                .Build ();
+    private void RequestBanner()
+    {
 
-		}
+        string adUnitId = bannerAdID;
 
-		private void ShowInterstitial ()
-		{
-				if (interstitial.IsLoaded ()) {
-						interstitial.Show ();
-				} else {
-						print ("Interstitial is not ready yet.");
-				}
-		}
+        #region Banner Size
+        AdSize adsize = AdSize.SmartBanner;
 
-		#region Banner callback handlers
+        if (Banner == true)
+        {
+            adsize = AdSize.Banner;
+        }
+        if (IABBanner == true)
+        {
+            adsize = AdSize.IABBanner;
+        }
+        if (Leaderboard == true)
+        {
+            adsize = AdSize.Leaderboard;
+        }
+        if (MediumRectangle == true)
+        {
+            adsize = AdSize.MediumRectangle;
+        }
+        if (SmartBanner == true)
+        {
+            adsize = AdSize.SmartBanner;
+        }
+        if ((Banner == true) && (IABBanner == true) &&
+            (MediumRectangle == true) && (Leaderboard == true) &&
+            (SmartBanner == true))
+        {
+            Debug.LogError("You check every BannerSize flags");
+        }
 
-		public void HandleAdLoaded (object sender, EventArgs args)
-		{
-				print ("HandleAdLoaded event received.");
-		}
+        if ((!Banner == true) && (!IABBanner == true) &&
+            (!MediumRectangle == true) && (!Leaderboard == true) &&
+            (!SmartBanner == true))
+        {
+            Debug.LogError("You need to check any BannerSize flag");
+        }
+        #endregion
 
-		public void HandleAdFailedToLoad (object sender, AdFailedToLoadEventArgs args)
-		{
-				print ("HandleFailedToReceiveAd event received with message: " + args.Message);
-		}
+        #region Banner Position
 
-		public void HandleAdOpened (object sender, EventArgs args)
-		{
-				print ("HandleAdOpened event received");
-		}
+        AdPosition adposition = AdPosition.Top;
 
-		void HandleAdClosing (object sender, EventArgs args)
-		{
-				print ("HandleAdClosing event received");
-		}
+        if (TopPosition == true)
+        {
 
-		public void HandleAdClosed (object sender, EventArgs args)
-		{
-				print ("HandleAdClosed event received");
-		}
+            adposition = AdPosition.Top;
+        }
 
-		public void HandleAdLeftApplication (object sender, EventArgs args)
-		{
-				print ("HandleAdLeftApplication event received");
-		}
+        if (BottomPosition == true)
+        {
 
-		#endregion
+            adposition = AdPosition.Bottom;
+        }
 
-		#region Interstitial callback handlers
+        if ((TopPosition == true) && (BottomPosition == true))
+        {
+            Debug.LogError("You check every position flags");
+        }
 
-		public void HandleInterstitialLoaded (object sender, EventArgs args)
-		{
-				print ("HandleInterstitialLoaded event received.");
-		}
+        if ((!TopPosition == true) && (!BottomPosition == true))
+        {
+            Debug.LogError("You need to check any position flag");
+        }
 
-		public void HandleInterstitialFailedToLoad (object sender, AdFailedToLoadEventArgs args)
-		{
-				print ("HandleInterstitialFailedToLoad event received with message: " + args.Message);
-		}
+        #endregion
 
-		public void HandleInterstitialOpened (object sender, EventArgs args)
-		{
-				print ("HandleInterstitialOpened event received");
-		}
+        // Create a banner.
+        bannerView = new BannerView(adUnitId, adsize, adposition);
+        // Register for ad events.
+        bannerView.AdLoaded += HandleAdLoaded;
+        bannerView.AdFailedToLoad += HandleAdFailedToLoad;
+        bannerView.AdOpened += HandleAdOpened;
+        bannerView.AdClosing += HandleAdClosing;
+        bannerView.AdClosed += HandleAdClosed;
+        bannerView.AdLeftApplication += HandleAdLeftApplication;
+        // Load a banner ad.
+        bannerView.LoadAd(createAdRequest());
+    }
 
-		void HandleInterstitialClosing (object sender, EventArgs args)
-		{
-				print ("HandleInterstitialClosing event received");
-		}
+    private void RequestInterstitial()
+    {
 
-		public void HandleInterstitialClosed (object sender, EventArgs args)
-		{
-				print ("HandleInterstitialClosed event received");
-		}
+        string adUnitId = interstitialAdID;
 
-		public void HandleInterstitialLeftApplication (object sender, EventArgs args)
-		{
-				print ("HandleInterstitialLeftApplication event received");
-		}
+        // Create an interstitial.
+        interstitial = new InterstitialAd(adUnitId);
+        // Register for ad events.
+        interstitial.AdLoaded += HandleInterstitialLoaded;
+        interstitial.AdFailedToLoad += HandleInterstitialFailedToLoad;
+        interstitial.AdOpened += HandleInterstitialOpened;
+        interstitial.AdClosing += HandleInterstitialClosing;
+        interstitial.AdClosed += HandleInterstitialClosed;
+        interstitial.AdLeftApplication += HandleInterstitialLeftApplication;
+        // Load an interstitial ad.
+        interstitial.LoadAd(createAdRequest());
+    }
 
-		#endregion
+    // Returns an ad request with custom ad targeting.
+    private AdRequest createAdRequest()
+    {
+        return new AdRequest.Builder()
+            .AddTestDevice("")
+            .AddKeyword(keywords)
+            //.SetGender(Gender.Male)
+            //.SetBirthday(new DateTime(BirthdayYear, BirthdayMonth, BirthdayDay))
+            .TagForChildDirectedTreatment(TagForChildDirectedTreatmentAD)
+            //.AddExtra("", "")
+            .Build();
+
+    }
+
+    private void ShowInterstitial()
+    {
+        if (interstitial.IsLoaded())
+        {
+            interstitial.Show();
+        }
+        else
+        {
+            print("Interstitial is not ready yet.");
+        }
+    }
+
+    #region Banner callback handlers
+
+    public void HandleAdLoaded(object sender, EventArgs args)
+    {
+        print("HandleAdLoaded event received.");
+    }
+
+    public void HandleAdFailedToLoad(object sender, AdFailedToLoadEventArgs args)
+    {
+        print("HandleFailedToReceiveAd event received with message: " + args.Message);
+    }
+
+    public void HandleAdOpened(object sender, EventArgs args)
+    {
+        print("HandleAdOpened event received");
+    }
+
+    void HandleAdClosing(object sender, EventArgs args)
+    {
+        print("HandleAdClosing event received");
+    }
+
+    public void HandleAdClosed(object sender, EventArgs args)
+    {
+        print("HandleAdClosed event received");
+    }
+
+    public void HandleAdLeftApplication(object sender, EventArgs args)
+    {
+        print("HandleAdLeftApplication event received");
+    }
+
+    #endregion
+
+    #region Interstitial callback handlers
+
+    public void HandleInterstitialLoaded(object sender, EventArgs args)
+    {
+        print("HandleInterstitialLoaded event received.");
+    }
+
+    public void HandleInterstitialFailedToLoad(object sender, AdFailedToLoadEventArgs args)
+    {
+        print("HandleInterstitialFailedToLoad event received with message: " + args.Message);
+    }
+
+    public void HandleInterstitialOpened(object sender, EventArgs args)
+    {
+        print("HandleInterstitialOpened event received");
+    }
+
+    void HandleInterstitialClosing(object sender, EventArgs args)
+    {
+        print("HandleInterstitialClosing event received");
+    }
+
+    public void HandleInterstitialClosed(object sender, EventArgs args)
+    {
+        print("HandleInterstitialClosed event received");
+    }
+
+    public void HandleInterstitialLeftApplication(object sender, EventArgs args)
+    {
+        print("HandleInterstitialLeftApplication event received");
+    }
+
+    #endregion
 }
