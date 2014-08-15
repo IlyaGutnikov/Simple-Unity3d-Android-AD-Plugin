@@ -24,9 +24,9 @@ public class GoogleMobileAdsDemoScript : MonoBehaviour
 
     public string keywords;
     public bool TagForChildDirectedTreatmentAD = false;
-    public int BirthdayYear;
-    public int BirthdayMonth;
-    public int BirthdayDay;
+    //public int BirthdayYear;
+    //public int BirthdayMonth;
+    //public int BirthdayDay;
 
     void OnGUI()
     {
@@ -168,7 +168,7 @@ public class GoogleMobileAdsDemoScript : MonoBehaviour
         bannerView.LoadAd(createAdRequest());
     }
 
-    private void RequestInterstitial()
+    public void RequestInterstitial()
     {
 
         string adUnitId = interstitialAdID;
@@ -200,8 +200,9 @@ public class GoogleMobileAdsDemoScript : MonoBehaviour
 
     }
 
-    private void ShowInterstitial()
+    public void ShowInterstitial()
     {
+
         if (interstitial.IsLoaded())
         {
             interstitial.Show();
