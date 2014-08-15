@@ -56,15 +56,15 @@ public class GoogleAdsScript : MonoBehaviour
             adsize = AdSize.SmartBanner;
         }
         if ((Banner == true) && (IABBanner == true) &&
-        (MediumRectangle == true) && (Leaderboard == true) &&
-        (SmartBanner == true))
+            (MediumRectangle == true) && (Leaderboard == true) &&
+            (SmartBanner == true))
         {
             Debug.LogError("You check every BannerSize flags");
         }
 
         if ((!Banner == true) && (!IABBanner == true) &&
-        (!MediumRectangle == true) && (!Leaderboard == true) &&
-        (!SmartBanner == true))
+            (!MediumRectangle == true) && (!Leaderboard == true) &&
+            (!SmartBanner == true))
         {
             Debug.LogError("You need to check any BannerSize flag");
         }
@@ -111,7 +111,7 @@ public class GoogleAdsScript : MonoBehaviour
         bannerView.LoadAd(createAdRequest());
     }
 
-    private void RequestInterstitial()
+    public void RequestInterstitial()
     {
 
         string adUnitId = interstitialAdID;
@@ -143,9 +143,9 @@ public class GoogleAdsScript : MonoBehaviour
 
     }
 
-    private void ShowInterstitial()
+    public void ShowInterstitial()
     {
-        RequestInterstitial();
+        //RequestInterstitial();
 
         if (interstitial.IsLoaded())
         {
@@ -155,6 +155,21 @@ public class GoogleAdsScript : MonoBehaviour
         {
             print("Interstitial is not ready yet.");
         }
+    }
+
+    private static GoogleAdsScript instance = null;
+
+    public static GoogleAdsScript Instance {
+        get { return instance; }
+    }
+    void Awake() {
+        if (instance != null && instance != this) {
+            Destroy(this.gameObject);
+            return;
+        } else {
+            instance = this;
+        }
+        DontDestroyOnLoad(this.gameObject);
     }
 
     void Start() {

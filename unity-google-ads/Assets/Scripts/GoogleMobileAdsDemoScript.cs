@@ -22,6 +22,8 @@ public class GoogleMobileAdsDemoScript : MonoBehaviour
     public bool TopPosition;
     public bool BottomPosition;
 
+
+
     public string keywords;
     public bool TagForChildDirectedTreatmentAD = false;
     //public int BirthdayYear;
