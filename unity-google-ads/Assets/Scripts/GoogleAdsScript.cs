@@ -145,7 +145,6 @@ public class GoogleAdsScript : MonoBehaviour
 
     public void ShowInterstitial()
     {
-        //RequestInterstitial();
 
         if (interstitial.IsLoaded())
         {
@@ -154,6 +153,7 @@ public class GoogleAdsScript : MonoBehaviour
         else
         {
             print("Interstitial is not ready yet.");
+            ShowInterstitial();
         }
     }
 
@@ -172,11 +172,25 @@ public class GoogleAdsScript : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
     }
 
+    public static GoogleAdsScript Instance {
+        get { return instance; }
+    }
+    void Awake() {
+
+        if (instance != null && instance != this) {
+            Destroy(this.gameObject);
+            return;
+        } else {
+            instance = this;
+        }
+        DontDestroyOnLoad(this.gameObject);
+    }
+
     void Start() {
 
         RequestBanner();
     }
-
+        
 
     #region Banner callback handlers
 
